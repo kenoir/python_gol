@@ -8,7 +8,7 @@ class Application:
     def __init__(self):
         self.win = GraphWin(self.application_name,self.window_size,self.window_size) 
     def run(self):
-        self.the_grid = TheGrid(5,self.win)
+        self.the_grid = TheGrid(2,self.win)
         self.the_grid.draw()
 
         while not self.win.closed:
@@ -40,23 +40,26 @@ class TheGrid:
 
     def __init__(self,grid_size,window):
         self.grid_size = grid_size
+        self.the_grid = [[None]*grid_size]*grid_size
         self.window = window
-        self.the_grid = [[LifeCell(Point(0, 0),20,self.window)]*grid_size]*grid_size
 
     def draw(self):
-        print self.the_grid 
-        print self.the_grid[3][3]
-        
-        for cell_row in self.the_grid:
-            for cell in cell_row:
-                print cell
+        offset_x = 0
+        offset_y = 0
 
-        self.the_grid[0][0] = LifeCell(Point(0, 0),20,self.window)
-        self.the_grid[0][0].draw()
+        for x in range(len(self.the_grid)):
+            for y in range(len(self.the_grid[x])): 
+                self.the_grid[y][x] = LifeCell(Point(offset_x, offset_y),20,self.window)
+                self.the_grid[y][x].draw()
+                offset_x += 21
+            offset_y +=21
+            offset_x = 0
         
     def update(self):
-        self.the_grid[0][0].state = 'blue' 
-        self.the_grid[0][0].update()
+        for x in range(len(self.the_grid)):
+            for y in range(len(self.the_grid[x])): 
+                self.the_grid[y][x].state = 'blue'
+                self.the_grid[y][x].update()
 
 a = Application()
 a.run()
