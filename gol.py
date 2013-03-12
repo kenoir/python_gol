@@ -74,5 +74,3 @@ class TheGrid:
                 self.the_grid[y][x].alive = bool(randint(0,1)) 
                 self.the_grid[y][x].update()    
 
-a = Application()
-a.run()
