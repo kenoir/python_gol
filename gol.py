@@ -22,6 +22,7 @@ class LifeCell:
     alive = True
     alive_color = 'green'
     dead_color = 'black'
+    updating_color = 'red'
 
     def __init__(self,location,size,window):
         self.size = size
@@ -39,7 +40,7 @@ class LifeCell:
         self.r.draw(self.window)
 
     def update(self):
-        self.r.setFill('red')
+        self.r.setFill(updating_color)
         if self.alive:
             state_color = self.alive_color
         else:
