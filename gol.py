@@ -27,6 +27,7 @@ class LifeCell:
         self.size = size
         self.location = location
         self.window = window
+        self.alive = bool(randint(0,1))
 
     def draw(self):        
         rectangle_end_x = self.location.x + self.size
@@ -38,12 +39,13 @@ class LifeCell:
         self.r.draw(self.window)
 
     def update(self):
+        self.r.setFill('red')
         if self.alive:
             state_color = self.alive_color
         else:
             state_color = self.dead_color
         self.r.setFill(state_color)     
-
+ 
 class TheGrid:
     """The Game Grid"""
 
@@ -51,7 +53,7 @@ class TheGrid:
         self.cell_size = cell_size
         self.grid_size = grid_size
         self.the_grid = [[0 for x in xrange(grid_size)] for x in xrange(grid_size)] 
-        self.display_buffer = [[0 for x in xrange(grid_size)] for x in xrange(grid_size)]
+        self.grid_buffer = [[0 for x in xrange(grid_size)] for x in xrange(grid_size)]
         self.window = window
 
     def draw(self):
@@ -71,6 +73,14 @@ class TheGrid:
     def update(self):
         for x in range(len(self.the_grid)):
             for y in range(len(self.the_grid[x])): 
-                self.the_grid[y][x].alive = bool(randint(0,1)) 
-                self.the_grid[y][x].update()    
+                left_cell_state = self.the_grid[(y-1)%self.grid_size][x].alive
+                right_cell_state = self.the_grid[(y+1)%self.grid_size][x].alive
+                self.grid_buffer[y][x] = left_cell_state and right_cell_state
 
+        for x in range(len(self.the_grid)):
+            for y in range(len(self.the_grid[x])): 
+                self.the_grid[y][x].alive = bool(self.grid_buffer[y][x])
+
+        for x in range(len(self.the_grid)):
+            for y in range(len(self.the_grid[x])): 
+                self.the_grid[y][x].update()    
