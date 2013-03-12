@@ -1,4 +1,5 @@
 from graphics import *
+from random import randint
 
 class Application:
     """The Application"""
@@ -18,7 +19,10 @@ class Application:
 
 class LifeCell:
     """The Fundamental Unit"""
-    state = 'red'
+    alive = True
+    alive_color = 'green'
+    dead_color = 'black'
+
     def __init__(self,location,size,window):
         self.size = size
         self.location = location
@@ -30,11 +34,15 @@ class LifeCell:
         rectangle_end = Point(rectangle_end_x,rectangle_end_y) 
 
         self.r = Rectangle(self.location,rectangle_end)
-        self.r.setFill(self.state) 
+        self.update()
         self.r.draw(self.window)
 
     def update(self):
-        self.r.setFill(self.state)
+        if self.alive:
+            state_color = self.alive_color
+        else:
+            state_color = self.dead_color
+        self.r.setFill(state_color)     
 
 class TheGrid:
     """The Game Grid"""
@@ -63,10 +71,7 @@ class TheGrid:
     def update(self):
         for x in range(len(self.the_grid)):
             for y in range(len(self.the_grid[x])): 
-                if self.the_grid[y][x].state == 'blue':
-                    self.the_grid[y][x].state = 'red'
-                else:
-                    self.the_grid[y][x].state = 'blue'
+                self.the_grid[y][x].alive = bool(randint(0,1)) 
                 self.the_grid[y][x].update()    
 
 a = Application()
