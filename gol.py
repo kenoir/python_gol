@@ -74,9 +74,26 @@ class TheGrid:
     def update(self):
         for x in range(len(self.the_grid)):
             for y in range(len(self.the_grid[x])): 
-                left_cell_state = self.the_grid[(y-1)%self.grid_size][x].alive
-                right_cell_state = self.the_grid[(y+1)%self.grid_size][x].alive
-                self.grid_buffer[y][x] = left_cell_state and right_cell_state
+                live_count = 0
+                next_alive = False
+                for offset_y in range(3):
+                    offset_y -= 1
+                    for offset_x in range(3):
+                        offset_x -= 1 
+                        neighbour_y = (y - offset_y)%self.grid_size
+                        neighbour_x = (x - offset_x)%self.grid_size
+
+                        live_count += int(self.the_grid[neighbour_y][neighbour_x].alive)
+                if self.the_grid[y][x].alive and live_count < 2:
+                    next_alive = False
+                elif self.the_grid[y][x].alive and live_count >=2 and live_count <=3: 
+                    next_alive = True
+                elif self.the_grid[y][x].alive and live_count > 3:
+                    next_alive = False
+                elif not self.the_grid[y][x].alive and live_count == 3:
+                    next_alive = True
+
+                self.grid_buffer[y][x] = next_alive 
 
         for x in range(len(self.the_grid)):
             for y in range(len(self.the_grid[x])): 
