@@ -40,7 +40,7 @@ class LifeCell:
         self.r.draw(self.window)
 
     def update(self):
-        self.r.setFill(updating_color)
+        self.r.setFill(self.updating_color)
         if self.alive:
             state_color = self.alive_color
         else:
