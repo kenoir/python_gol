@@ -4,16 +4,17 @@ class Application:
     """The Application"""
     application_name = "Hog Wild!"
     window_size = 300
+    cell_size = 30
 
     def __init__(self):
         self.win = GraphWin(self.application_name,self.window_size,self.window_size) 
     def run(self):
-        self.the_grid = TheGrid(2,self.win)
+        cells_in_row = self.window_size / self.cell_size
+        self.the_grid = TheGrid(self.cell_size,cells_in_row,self.win)
         self.the_grid.draw()
 
         while not self.win.closed:
             self.the_grid.update()
-            self.win.update()
 
 class LifeCell:
     """The Fundamental Unit"""
@@ -38,9 +39,11 @@ class LifeCell:
 class TheGrid:
     """The Game Grid"""
 
-    def __init__(self,grid_size,window):
+    def __init__(self,cell_size,grid_size,window):
+        self.cell_size = cell_size
         self.grid_size = grid_size
-        self.the_grid = [[None]*grid_size]*grid_size
+        self.the_grid = [[0 for x in xrange(grid_size)] for x in xrange(grid_size)] 
+        self.display_buffer = [[0 for x in xrange(grid_size)] for x in xrange(grid_size)]
         self.window = window
 
     def draw(self):
@@ -49,19 +52,22 @@ class TheGrid:
 
         for x in range(len(self.the_grid)):
             for y in range(len(self.the_grid[x])): 
-                self.the_grid[y][x] = LifeCell(Point(offset_x, offset_y),20,self.window)
-                self.the_grid[y][x].draw()
-                offset_x += 21
-            offset_y +=21
+                cell = LifeCell(Point(offset_x, offset_y),self.cell_size,self.window)
+                cell.draw()
+                self.the_grid[y][x] = cell 
+
+                offset_x += self.cell_size 
+            offset_y += self.cell_size
             offset_x = 0
         
     def update(self):
         for x in range(len(self.the_grid)):
             for y in range(len(self.the_grid[x])): 
-                self.the_grid[y][x].state = 'blue'
-                self.the_grid[y][x].update()
+                if self.the_grid[y][x].state == 'blue':
+                    self.the_grid[y][x].state = 'red'
+                else:
+                    self.the_grid[y][x].state = 'blue'
+                self.the_grid[y][x].update()    
 
 a = Application()
 a.run()
-
-
